@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Forever 💖</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+:root {
+    --primary-pink: #ffb7c5;
+    --deep-red: #ff4d6d;
+    --soft-white: #fff5f6;
+    --card-pink: #fce4ec;
+    --envelope-bg: #fff9fa;
+    --heartbeat-speed: 1.5s;
+}
+
+body {
+    margin: 0; padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--soft-white), var(--primary-pink));
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100vh; width: 100vw; overflow: hidden; position: fixed;
+}
+
+/* Floating Hearts Background */
+.hearts-container { position: fixed; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.heart { position: absolute; color: var(--deep-red); font-size: 20px; animation: float 6s linear infinite; opacity: 0; }
+@keyframes float {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+}
+
+/* BOUQUET IMAGES */
+.floral-background4, .floral-background3, .floral-background2, .floral-background1, .floral-background {
+    background-image: url('/image/FlowersBackground.png');
+    height: 100%; width: 100%; position: absolute; z-index: 0;
+    background-repeat: no-repeat; background-position: center;
+    opacity: 0.6;
+}
+.floral-background4 { top: 30%; left: 50%; transform: translate(-50%, -50%); }
+.floral-background3 { top: 50%; left: 30%; transform: translate(-50%, -50%); }
+.floral-background2 { top: 70%; left: 50%; transform: translate(-50%, -50%); }
+.floral-background1 { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.floral-background  { top: 50%; left: 70%; transform: translate(-50%, -50%); }
+
+/* MAIN CARD ANIMATION */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.main-card {
+    background: var(--envelope-bg);
+    padding: 2.5rem 2rem 1.5rem 2rem;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 15px 50px rgba(255, 77, 109, 0.2);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    max-width: 90%; width: 480px;
+    border: 1px solid #fce4ec;
+    margin-top: 60px;
+    animation: slideUp 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.main-card::before {
+    content: ""; position: absolute; top: -60px; left: 0; width: 100%; height: 60px;
+    background-color: #ff9faf; clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+}
+
+/* HEARTBEAT UX */
+@keyframes heartbeat {
+    0% { transform: translateX(-50%) scale(1); }
+    15% { transform: translateX(-50%) scale(1.15); }
+    30% { transform: translateX(-50%) scale(1); }
+    45% { transform: translateX(-50%) scale(1.15); }
+    100% { transform: translateX(-50%) scale(1); }
+}
+
+.envelope-seal {
+    position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+    background: var(--deep-red); color: white; width: 45px; height: 45px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 22px; z-index: 2;
+    box-shadow: 0 0 15px rgba(255, 77, 109, 0.5);
+    animation: heartbeat var(--heartbeat-speed) infinite ease-in-out;
+}
+
+/* MODERN TOTALS UX */
+.totals-container {
+    display: flex; justify-content: space-around;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(5px);
+    padding: 12px; border-radius: 15px; margin: 15px 0;
+    border: 1px solid rgba(255, 183, 197, 0.3);
+}
+.total-item { display: flex; flex-direction: column; }
+.total-number { font-size: 1.3rem; font-weight: bold; color: var(--deep-red); }
+.total-label { font-size: 0.65rem; color: #777; text-transform: uppercase; letter-spacing: 0.5px; }
+
+h1 { color:var(--deep-red); font-size: 1.4rem; margin: 5px 0; letter-spacing: -0.5px; }
+
+/* SMALL CARDS UX */
+.card-container { display: flex; justify-content: center; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
+.envelope-card {
+    width: 90px; height: 120px; background: white; border: 1px solid #f8bbd0;
+    border-radius: 12px; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+.envelope-card:hover { 
+    transform: translateY(-8px) scale(1.05); 
+    box-shadow: 0 10px 20px rgba(255, 77, 109, 0.15);
+    border-color: var(--primary-pink);
+}
+
+/* BUTTONS UX */
+.btn-style {
+    padding: 10px 25px; border-radius: 50px; border: none;
+    background: white; color: var(--deep-red); font-weight: bold; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 77, 109, 0.2);
+    transition: all 0.3s ease;
+    border: 1px solid var(--primary-pink);
+}
+.btn-style:hover { background: var(--deep-red); color: white; transform: scale(1.1); }
+
+.pulse-btn { animation: btnPulse 2s infinite; }
+@keyframes btnPulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 77, 109, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 77, 109, 0); }
+}
+#image-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-media {
+    width: 100%;
+    max-width: 200px; /* Smaller size so multiple fit better */
+    border-radius: 15px;
+    border: 3px solid var(--primary-pink);
+    object-fit: cover;
+}
+#no-btn { position: absolute; transition: 0.2s; z-index: 10; }
+
+#message-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(3px); z-index: 100; justify-content: center; align-items: center; }
+.modal { 
+    background: white; padding: 30px; border-radius: 25px; text-align: center; 
+    border: 4px double var(--primary-pink); 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    max-width: 80%;
+    transform: scale(0.9);
+    animation: modalPop 0.3s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes modalPop { to { transform: scale(1); } }
+</style>
+</head>
+<body>
+
+<div class="floral-background"></div>
+<div class="floral-background1"></div>
+<div class="floral-background2"></div>
+<div class="floral-background3"></div>
+<div class="floral-background4"></div>
+
+<div class="hearts-container" id="hearts"></div>
+
+<div class="main-card">
+    <div class="envelope-seal">❤️</div>
+    
+    <h1>For Allyssa Ritchie</h1>
+
+    <div class="totals-container">
+        <div class="total-item">
+            <span class="total-number" id="total-years">0</span>
+            <span class="total-label">Years</span>
+        </div>
+        <div class="total-item">
+            <span class="total-number" id="total-months">0</span>
+            <span class="total-label">Months</span>
+        </div>
+        <div class="total-item">
+            <span class="total-number" id="total-days">0</span>
+            <span class="total-label">Days</span>
+        </div>
+    </div>
+
+    <p id="typewriter" style="min-height: 2em; font-size: 0.9rem; margin: 10px 0; color: #666; font-style: italic;"></p>
+
+    <div class="card-container">
+        <div class="envelope-card" onclick="showMessage('If you Miss me 💌', 'Hello mahal ko i miss you too mahal ko, mahal kita palagi lagi mong tandaan nasatabi mo lang ako palagi, kapag ma lungkot ka or you feel lonely or may ganagawa ako sayo na ikakalungkot mo im sorry dito lang ako kasama ka palagi mahal, chat mo lang ako or call o punta mahal hayapin kita nang mahigpit para mapunan ko pag ka miss mo sakin ilove you mooree mahal koooo.', '/video/1f.mp4')">
+            <div style="color:var(--primary-pink); font-size:24px; margin-bottom: 5px;">🤍</div>
+            <span style="font-size:0.65rem; font-weight:bold; color:var(--deep-red);"></span>
+        </div>
+        <div class="envelope-card" onclick="showMessage('If ever sad ka', 'mahal i always here lang palagi mahal ko ha, wag kana ma lungkot ayaw ko na malungkot ka kaya palagi kang mag smile , ayaw kona sad ang baby ko nayan okiee. i love you more mahal ko mahal na mahal kitaa, if every na malungkot ka pwedi yakapin mo lang ako at yayakapin din kita ng mahigpit alam ko na hindi ka masyado nag sasabi sakin but feel it naman kaya hugg kita palagi dito lang ako mahal ko i love youu more mahal koo i love you soo much', '/video/2f.mp4')">
+            <div style="color:var(--primary-pink); font-size:24px; margin-bottom: 5px;">🤍</div>
+            <span style="font-size:0.65rem; font-weight:bold; color:var(--deep-red);"></span>
+        </div>
+        <div class="envelope-card" onclick="showMessage('When u cant sleep ', 'Mahal kung nahihirapan ka matulog just look our picture together pang pa antok mahal, HAHAHA. eme lang para lang ma kita mo lang mga memories natin if ever nama ka tulog ka mapanaginipan mo mga memories na tin together. Call mo lang din ako mahal anytime para patulogin kita sorry kung hindi kita katabi matulog kapag gabi mahal tiis tiss na lang malapit nadin tayo mag sama mahal everyday and every night mahal ko ilove you so muchh mahal ko, sleep ka maanga wag mag puyat palagi para preety face ang baby ko ha. mHUaaaaaa', '/image/1bf3762c-5bae-46ac-a3af-1ac1fd8e289e.jpg','/image/d81769d9-1cc6-4d07-a2e7-e4233363c484.jpg')">
+            <div style="color:var(--primary-pink); font-size:24px; margin-bottom: 5px;">🤍</div>
+            <span style="font-size:0.65rem; font-weight:bold; color:var(--deep-red);"></span>
+        </div>
+        <div class="envelope-card" onclick="showMessage('Proud 🏆', 'Proud na Proud ako sayo mahal ko subrang sipag mo everyday mahal mapa work man or bahay, you did well every single day mahal ko. ginagawa mo lahat mahal para salahat and para sakin mahal proud na proud ako sayo mahal ko. kaya mahal na mahal kita talino mo pa grabeee ba. HAHAHA wala na ako masabi sayo ganda mo mahal hahaha promise i love you so muchhh mahal mhuuaaa.... ganda mo shit.', '/image/e03d530f-1352-49f6-b157-ded14f405825.jpg')">
+            <div style="color:var(--primary-pink); font-size:24px; margin-bottom: 5px;">🤍</div>
+            <span style="font-size:0.65rem; font-weight:bold; color:var(--deep-red);"></span>
+        </div>
+    </div>
+
+    <div id="proposal-section">
+        <h3 style="font-size: 1rem; margin-bottom: 15px; color: #444;">Will you be my Valentine?</h3>
+        <button class="btn-style pulse-btn" onclick="celebrate()">YES! 💕</button>
+        <button class="btn-style" id="no-btn" onmouseover="moveNoButton()">NO ❌</button>
+    </div>
+</div>
+
+<div id="message-overlay" onclick="closeMessage()">
+    <div class="modal" onclick="event.stopPropagation()">
+        <h2 id="modal-title" style="color: var(--deep-red); margin-bottom: 10px;"></h2>
+        
+        <img id="modal-image" src="" style="display:none; width:100%; max-width:250px; border-radius:15px; margin-bottom: 15px; border: 3px solid var(--primary-pink); object-fit: cover;">
+        
+        <video id="modal-video" style="display:none; width:100%; max-width:250px; border-radius:15px; margin-bottom: 15px; border: 3px solid var(--primary-pink);" controls playsinline>
+            Your browser does not support the video tag.
+        </video>
+        
+        <p id="modal-body" style="color: #555; font-size: 1.1rem; margin-top: 5px;"></p>
+        <p style="font-size: 0.7rem; color: #999; margin-top: 15px;">(Click outside or use the button to close)</p>
+        <button class="btn-style" onclick="closeMessage()" style="margin-top: 10px;">Close</button>
+    </div>
+</div>
+
+<script>
+const startDate = new Date("2022-10-04");
+
+function updateTimer() {
+    const now = new Date();
+    const diffInMs = now - startDate;
+    const totalDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    const totalMonths = (now.getFullYear() - startDate.getFullYear()) * 12 + (now.getMonth() - startDate.getMonth());
+    const totalYears = Math.floor(totalMonths / 12);
+
+    document.getElementById("total-years").innerText = totalYears;
+    document.getElementById("total-months").innerText = totalMonths;
+    document.getElementById("total-days").innerText = totalDays;
+}
+
+updateTimer();
+setInterval(updateTimer, 3600000);
+
+const text = "Every day with you is my favorite day. I love you endlessly. 💖";
+let i=0;
+function typewriter(){
+    if(i<text.length){
+        document.getElementById("typewriter").innerHTML+=text.charAt(i);
+        i++;
+        setTimeout(typewriter, 60);
+    }
+}
+setTimeout(typewriter, 1000);
+
+function createHeart(){
+    const heart=document.createElement('div');
+    heart.classList.add('heart');
+    heart.innerHTML='❤️';
+    heart.style.left=Math.random()*100+'vw';
+    heart.style.animationDuration=Math.random()*2+4+'s';
+    document.getElementById('hearts').appendChild(heart);
+    setTimeout(()=>heart.remove(), 6000);
+}
+setInterval(createHeart, 400);
+
+function moveNoButton(){
+    const btn=document.getElementById('no-btn');
+    const x=Math.random()*(window.innerWidth - btn.offsetWidth);
+    const y=Math.random()*(window.innerHeight - btn.offsetHeight);
+    btn.style.left=x+'px';
+    btn.style.top=y+'px';
+}
+
+function showMessage(title, body, fileSrc) {
+    document.getElementById('modal-title').innerText = title;
+    document.getElementById('modal-body').innerText = body;
+    
+    const modalImg = document.getElementById('modal-image');
+    const modalVid = document.getElementById('modal-video');
+
+    // Hide both initially
+    modalImg.style.display = 'none';
+    modalVid.style.display = 'none';
+    modalVid.pause(); 
+    modalVid.src = ""; // Clear src to stop loading
+
+    if (fileSrc) {
+        if (fileSrc.toLowerCase().endsWith('.mp4')) {
+            modalVid.src = fileSrc;
+            modalVid.style.display = 'inline-block';
+            modalVid.load();
+            modalVid.play().catch(e => console.log("Auto-play blocked"));
+        } else {
+            modalImg.src = fileSrc;
+            modalImg.style.display = 'inline-block';
+        }
+    }
+    
+    document.getElementById('message-overlay').style.display = 'flex';
+}
+
+// FIXED: Only one closeMessage function that properly stops the video
+function closeMessage(){
+    const modalVid = document.getElementById('modal-video');
+    modalVid.pause(); 
+    modalVid.src = ""; // This completely kills the video playback/audio
+    document.getElementById('message-overlay').style.display = 'none';
+}
+
+function celebrate(){
+    confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#ff4d6d', '#ffb7c5', '#ffffff']
+    });
+    setTimeout(() => {
+        confetti({ particleCount: 100, spread: 100, origin: { x: 0.3, y: 0.7 } });
+        confetti({ particleCount: 100, spread: 100, origin: { x: 0.7, y: 0.7 } });
+    }, 300);
+    
+    showMessage('She said YES! 💕', 'You make me the happiest person in the world. I love you forever Mahal! mahal na mahal kitaa sorry ito lang nagawa ko mahal ko ilove you mahal happy valentines day mahal koooo mhuuaa mhuaaa kiss madami and hugs mahal salamat sa time and days mahal speending with me mahal ko, more valentines day will come to uss mahal mhuuuaa..', null);
+}
+</script>
+
+</body>
+</html>
